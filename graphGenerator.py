@@ -9,6 +9,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from progressBar import *
+from dataExtractor import *
 
 def main():
 	
@@ -17,33 +18,22 @@ def main():
 
 	# File path to JSON file
 	path = os.path.abspath('./Process2PCData/Process2PC.json')
+	
+	# JSON structure path to desired information. 
+	infoPath = [0, "_source", "layers", "cipcls", "Command Specific Data", "cip.data"]
 
-	print("Opening JSON file at path " + path + "...\n")
+	print("Opening JSON file at path " + path + " ... ", end = "")
 
 	# Open JSON file containing network data sample.
 	with open(path) as f:
 		# Load sample to Python List object
 		d = json.load(f)
-
-		# Set variables needed for later.		
-		length = len(d[0]["_source"]["layers"]["cipcls"]["Command Specific Data"]["cip.data"].split(":"))
-		narray = np.zeros(length)
+		print("Done.\n")		
 		
-		print("Storing JSON file data in a pandas DataFrame...")
-
-		# Extract from the JSON file the propietary protocol payload for 
-		# each packet, and add it to a data matrix.
-		for i in range(0, len(d)):
-			sAux = d[i]["_source"]["layers"]["cipcls"]["Command Specific Data"]["cip.data"]
-			sAux = sAux.split(":")
-			sAux = hexToIntList(sAux)	
-			narray = np.vstack((narray, sAux))
-			# Printing progress bar for data 
-			printProgressBar (i, len(d) - 1, 'Progress', 'Complete')
-
-		# Remove the first row of zeros and store the matrix in a DataFrame.
-		narray = narray[1:]
-		df = pd.DataFrame(narray)
+		# Stack all network payloads from JSON file into a pandas
+		# Dataframe.
+		print("Storing JSON file data in a pandas DataFrame ... ")
+		df = gatherJSONData(path, infoPath)
 		
 		print("Calculating byte graphs...")
 
@@ -57,7 +47,7 @@ def main():
 			plt.savefig("./Plots/BehavBite" + str(i) + ".png")
 			printProgressBar (i, len(df.loc[0,:]) - 1, 'Progress', 'Complete')
 		
-		print("Graphs stored at " + os.path.abspath('./Plots') + ".")
+		print("Graphs succesfully stored at " + os.path.abspath('./Plots') + ".")
 
 # Function to transform list with hex values into integer values.
 def hexToIntList(hexList):
@@ -69,5 +59,3 @@ def hexToIntList(hexList):
 # Main function
 if __name__ == "__main__":
     main()
-
-# print(json.dumps(d[0]["_source"]["layers"]["cipcls"]["Command Specific Data"]["cip.data"], sort_keys=True, indent=4))
