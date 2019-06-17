@@ -3,6 +3,7 @@
 # of each byte over time.
 
 import sys, os
+from subprocess import run
 import json
 import numpy as np
 import pandas as pd
@@ -22,6 +23,13 @@ def main():
 	# JSON structure path to desired information. 
 	infoPath = [0, "_source", "layers", "cipcls", "Command Specific Data", "cip.data"]
 
+	# Bit length to represent the binary data in the 
+	# pandas DataFrame
+	bitLength = 4
+
+	# Maximum number of payloads to import
+	maxPayloads = 50
+
 	print("Opening JSON file at path " + path + " ... ", end = "")
 
 	# Open JSON file containing network data sample.
@@ -33,18 +41,24 @@ def main():
 		# Stack all network payloads from JSON file into a pandas
 		# Dataframe.
 		print("Storing JSON file data in a pandas DataFrame ... ")
-		df = gatherJSONData(path, infoPath)
+		df = importJSONData(path, infoPath, bitLength, maxPayloads)
 		
 		print("Calculating byte graphs...")
+		
+		# Reset Plots directory for new graphs
+		if os.path.isdir("./Plots"):
+			run(["rm", "-rf", "./Plots"])
+
+		run(["mkdir", "./Plots"])
 
 		# Plot the values of each byte over time into separate figures.
 		for i in range(0, len(df.loc[0,:])):
 			plt.clf()
-			plt.plot(df.index[:51], df.loc[:50,i], label='Byte #' + str(i))
+			plt.plot(df.index, df.loc[:,i], label='Byte #' + str(i))
 			plt.xlabel('Time')
 			plt.ylabel('Value')
-			plt.title("Behaviour of byte #" + str(i))
-			plt.savefig("./Plots/BehavBite" + str(i) + ".png")
+			plt.title("Behaviour #" + str(i))
+			plt.savefig("./Plots/BehavBit" + str(i) + ".png")
 			printProgressBar (i, len(df.loc[0,:]) - 1, 'Progress', 'Complete')
 		
 		print("Graphs succesfully stored at " + os.path.abspath('./Plots') + ".")
