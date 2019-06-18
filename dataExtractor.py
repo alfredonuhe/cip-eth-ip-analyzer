@@ -9,7 +9,7 @@ totalIterations = 0
 
 # Stack all elements with the same payloadpath from a JSON
 # file.
-def importJSONData(filePath, payloadPath, bitLength, maxPayloads):
+def importJSONData(filePath, payloadPath, bitLength = 1, maxPayloads = 100):
 
 	if(bitLength != 1 and bitLength != 4 and bitLength != 8):
 		print("Please enter a valid bitLength. Either 1, 4 or 8 bits.")
