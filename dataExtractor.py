@@ -16,6 +16,8 @@ def importJSONData(filePath, payloadPath, bitLength, maxPayloads):
 		exit()
 
 	global totalIterations
+
+	print("Storing JSON file data in a pandas DataFrame ... ")
 	# Open JSON file containing network data sample.
 	with open(filePath) as f:
 		# Load sample to Python List object

@@ -29,39 +29,31 @@ def main():
 
 	# Maximum number of payloads to import
 	maxPayloads = 50
+	
+	# Stack all network payloads from JSON file into a pandas
+	# Dataframe.
+	print("Opening JSON file at path ", path, " ...\n")
+	df = importJSONData(path, infoPath, bitLength, maxPayloads)
+	
+	print("Calculating byte graphs...")
+	
+	# Reset Plots directory for new graphs
+	if os.path.isdir("./Plots"):
+		run(["rm", "-rf", "./Plots"])
 
-	print("Opening JSON file at path " + path + " ... ", end = "")
+	run(["mkdir", "./Plots"])
 
-	# Open JSON file containing network data sample.
-	with open(path) as f:
-		# Load sample to Python List object
-		d = json.load(f)
-		print("Done.\n")		
-		
-		# Stack all network payloads from JSON file into a pandas
-		# Dataframe.
-		print("Storing JSON file data in a pandas DataFrame ... ")
-		df = importJSONData(path, infoPath, bitLength, maxPayloads)
-		
-		print("Calculating byte graphs...")
-		
-		# Reset Plots directory for new graphs
-		if os.path.isdir("./Plots"):
-			run(["rm", "-rf", "./Plots"])
-
-		run(["mkdir", "./Plots"])
-
-		# Plot the values of each byte over time into separate figures.
-		for i in range(0, len(df.loc[0,:])):
-			plt.clf()
-			plt.plot(df.index, df.loc[:,i], label='Byte #' + str(i))
-			plt.xlabel('Time')
-			plt.ylabel('Value')
-			plt.title("Behaviour #" + str(i))
-			plt.savefig("./Plots/BehavBit" + str(i) + ".png")
-			printProgressBar (i, len(df.loc[0,:]) - 1, 'Progress', 'Complete')
-		
-		print("Graphs succesfully stored at " + os.path.abspath('./Plots') + ".")
+	# Plot the values of each byte over time into separate figures.
+	for i in range(0, len(df.loc[0,:])):
+		plt.clf()
+		plt.plot(df.index, df.loc[:,i], label='Byte #' + str(i))
+		plt.xlabel('Time')
+		plt.ylabel('Value')
+		plt.title("Behaviour #" + str(i))
+		plt.savefig("./Plots/BehavBit" + str(i) + ".png")
+		printProgressBar (i, len(df.loc[0,:]) - 1, 'Progress', 'Complete')
+	
+	print("Graphs succesfully stored at " + os.path.abspath('./Plots') + ".")
 
 # Function to transform list with hex values into integer values.
 def hexToIntList(hexList):
