@@ -25,19 +25,13 @@ def main():
 			print("Error, the file path ", path, " isn't accessible.")
 			exit()
 
-		print("Opening JSON file at path " + path + " ... ", end = "")
-
-		# Open JSON file containing network data sample.
-		with open(path) as f:
-			# Load sample to Python List object
-			d = json.load(f)
-			print("Done.\n")		
+		print("Opening JSON file at path " + path + " ...\n")		
 			
-			# Stack all network payloads from JSON file into a pandas
-			# Dataframe.
-			print("Storing JSON file data in a pandas DataFrame ... ")
-			df = gatherJSONData(path, jsonPath)
-			dfList.append(df)
+		# Stack all network payloads from JSON file into a pandas
+		# Dataframe.
+		print("Storing JSON file data in a pandas DataFrame ... ")
+		df = importJSONData(path, jsonPath)
+		dfList.append(df)
 	
 	checkDfShapes(dfList)
 
