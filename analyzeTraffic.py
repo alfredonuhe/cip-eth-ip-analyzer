@@ -3,7 +3,7 @@ from random import randint
 import numpy as np
 import pandas as pd
 from progressBar import *
-from dataExtractor import *
+from DataImporter import DataImporter
 
 def main():
 	#Initiate process duration timer
@@ -38,7 +38,9 @@ def main():
 	
 	# Import payloads from the JSON file
 	print("Opening JSON file at path " + path + " ...\n")		
-	df = importJSONData(path, infoPath, bitLength, maxPayloads)
+	di = DataImporter(path, infoPath, 1, 2000)
+	di.init()
+	df = di.df
 	
 	# Create array containing the data statistics
 	statArray = np.zeros(numMStats)	

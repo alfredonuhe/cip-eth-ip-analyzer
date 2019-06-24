@@ -7,7 +7,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from progressBar import *
-from dataExtractor import *
+from DataImporter import DataImporter
 
 def main():
 	startTime = time.time()
@@ -29,9 +29,9 @@ def main():
 			
 		# Stack all network payloads from JSON file into a pandas
 		# Dataframe.
-		print("Storing JSON file data in a pandas DataFrame ... ")
-		df = importJSONData(path, jsonPath)
-		dfList.append(df)
+		di = DataImporter(path, jsonPath, 4, 2000)
+		di.init()
+		dfList.append(di.df)
 	
 	checkDfShapes(dfList)
 

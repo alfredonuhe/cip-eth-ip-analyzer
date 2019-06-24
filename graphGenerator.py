@@ -10,7 +10,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from progressBar import *
-from dataExtractor import *
+from DataImporter import DataImporter
 
 def main():
 	
@@ -33,7 +33,9 @@ def main():
 	# Stack all network payloads from JSON file into a pandas
 	# Dataframe.
 	print("Opening JSON file at path ", path, " ...\n")
-	df = importJSONData(path, infoPath, bitLength, maxPayloads)
+	di = DataImporter(path, infoPath, bitLength, maxPayloads)
+	di.init()
+	df = di.df
 	
 	print("Calculating byte graphs...")
 	
