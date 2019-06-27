@@ -23,7 +23,7 @@ def main():
 
 	# Bit length to represent the binary data in the 
 	# pandas DataFrame
-	bitLength = 8
+	bitLength = 4
 
 	# Maximum number of payloads to import
 	maxPayloads = 100
@@ -86,21 +86,21 @@ def calculateCorrelation(df, windowSize, index):
 		sIndex = int(index - (windowSize/2))
 		eIndex = int(index + (windowSize/2))
 
-	streak = False
+	streak = 0
 	result = []
 
 	for i in range(sIndex, eIndex):
 		aux = 0
 		for j in range(0, df.shape[1]):		
 			if(df.loc[index, j] == df.loc[i, j]):
-				if(streak):			
-					aux += 1
+				if(streak > 0):			
+					aux += pow(2, streak)
 				else:
-					aux += 1
-				streak = True
+					aux += pow(2, streak)
+				streak += 1
 			else:
-				streak = False
-		result.append(aux/df.shape[1])
+				streak = 0
+		result.append(aux/pow(2, df.shape[1]))
 	return result
 
 
